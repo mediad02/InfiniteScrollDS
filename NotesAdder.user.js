@@ -7,10 +7,9 @@
 // @match        https://danestreet.com/referrals/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=danestreet.com
 // @grant        none
-// @require      https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     // Dictionary of words/phrases and corresponding notes
@@ -21,6 +20,8 @@
         'Lidothol': '📌 NOTE: A topical is required 📌',
         // Add more words/phrases and notes as needed
     };
+
+
 
     // Function to add notes based on the dictionary
     function addNotes() {
@@ -37,8 +38,27 @@
         });
     }
 
-    $(function () {
-        addNotes();
-    });
+    function populateCaseInfo(){
+        let claimantNameElement = document.querySelector('fieldset.claimant-info tr:nth-child(1) td:nth-child(2)');
+        let dateOfBirthElement = document.querySelector('fieldset.claimant-info tr:nth-child(5) td:nth-child(2)');
+        let dateOfInjuryElement = document.querySelector('fieldset.claim-info tr:nth-child(2) td:nth-child(2)');
+        let jurisdictionStateElement = document.querySelector('fieldset.claim-info tr:nth-child(5) td:nth-child(2)');
+
+        caseInfo.claimantName = claimantNameElement.innerText;
+        caseInfo.dateOfBirth = dateOfBirthElement.innerText;
+        caseInfo.dateOfInjury = dateOfInjuryElement.innerText;
+        caseInfo.jurisdictionState = jurisdictionStateElement.innerText;
+
+        console.log(caseInfo);
+    }
+
+
+    // Starting point
+
+    var caseInfo = {};
+    populateCaseInfo();
+
+
+    addNotes();
 
 })();

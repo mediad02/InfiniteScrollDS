@@ -1,47 +1,85 @@
 // ==UserScript==
 // @name         ODGQuick Copy Button
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.4
 // @description  try to take over the world!
 // @author       Adolfo Medina
 // @match        https://www.odgbymcg.com/treatment
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=odgbymcg.com
 // @grant        none
+// @run-at       document-end
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
-    const elements = document.querySelectorAll('h2.tab-header');
+    function addButtons() {
+        document.querySelectorAll('h2.tab-header')
+            .forEach(treatmentHeader => {
+                let button = createCopyButton();
 
-    elements.forEach(element => {
-        const button = document.createElement('button');
-        button.textContent = 'Copy Guideline';
+                treatmentHeader.parentElement.prepend(button);
+            });
+    }
 
-        button.addEventListener('click', () => {
-            let bodyElement = element.nextElementSibling;
-            let title = element.firstChild?.textContent.trim();
-            let effectiveDate = bodyElement.querySelector('div.modified-date')?.textContent.trim();
-            let treatmentType = bodyElement.querySelector('div.col-md-12:nth-child(3)')?.textContent.trim();
-            let recommendationTitle = bodyElement.querySelector('div.recommendation-section.col-sm-12.col-md-12.col-lg-12 h3.page-subheader')?.textContent.trim();
-            let recommendationTitleBody = bodyElement.querySelector('div.recommendation-section.col-sm-12.col-md-12.col-lg-12 div.evidencethtml')?.textContent.trim();
-            let recommendationBody = bodyElement.querySelectorAll('div.col-sm-12.col-md-12.col-lg-12');
+    function createCopyButton() {
+        let button = document.createElement('button');
 
-            let guideline = title + '\n' + effectiveDate + '\n' + treatmentType + '\n' + recommendation + '\n' + recommendationBody;
+        button.textContent = "Copy";
+        button.className = 'copy-guideline-btn';
+        button.style.marginLeft = '10px';
+        button.style.textAlign = 'left';
 
-
-            console.log(recommendationTitleBody);
-            
-
-            navigator.clipboard.writeText(guideline)
-                .then(() => {
-                    alert('Text copied to clipboard!');
-                })
-                .catch(err => {
-                    console.error('Failed to copy text: ', err);
-                });
+        button.addEventListener('click', (event) => {
+            let guidelineElement = event.target.parentElement;
+            copyHTMLToClipboard(guidelineElement);
         });
 
-        element.appendChild(button);
-    })
+        return button;
+    }
+
+    async function copyHTMLToClipboard(element) {
+        let cloneElement = element.cloneNode(true);
+
+        let modifiedDate = cloneElement.querySelector('div.modified-date').cloneNode(true).textContent;
+        let treatmentTypeNode = Array.from(cloneElement.querySelectorAll('article div.row div.col-md-11 div.col-md-12'))
+            .find(div => div.textContent.includes('Treatment type:'));
+        let treatmentType = treatmentTypeNode?.cloneNode(true)?.textContent ?? ''
+        let header = cloneElement.querySelector('h2.tab-header').cloneNode(true).textContent;
+
+        cloneElement.querySelector('article div.row div.col-md-11 div.recommendation-section h3.page-subheader').firstChild.data += " - "
+
+        cloneElement.querySelector('.copy-guideline-btn').remove();
+        cloneElement.querySelector('h2.tab-header').remove();
+        cloneElement.querySelector('div.proc-code-section').remove();
+        cloneElement.querySelectorAll('article div.row div.col-md-11 div.col-md-12').forEach(div => {
+            if(div.textContent.includes('Citations') || div.textContent.includes('Body system:') || div.textContent.includes('Related Topics:') || div.textContent.includes('Treatment type:')) {
+                div.remove();
+            }
+        });
+        cloneElement.querySelector('article div.row div.col-md-11 br').remove();
+        cloneElement.querySelector('div.modified-date').remove();
+
+        let guideline = cloneElement.outerHTML;
+
+        try {
+            await navigator.clipboard.write([
+                new ClipboardItem({
+                    'text/html': new Blob(
+                        ['<b><div>ODG by MCG</div>', modifiedDate, '<div>', header, '</div></b>', treatmentType, guideline],
+                        { type: 'text/html' }
+                    ),
+                    'text/plain': new Blob(
+                        ['ODG by MCG', modifiedDate.textContent, guideline.textContent],
+                        { type: 'text/plain' }
+                    )
+                })
+            ]);
+            console.log('HTML copied to clipboard successfully');
+        } catch (err) {
+            console.error('Failed to copy HTML to clipboard:', err);
+        }
+    }
+
+    window.addEventListener('load', addButtons);
 })();
