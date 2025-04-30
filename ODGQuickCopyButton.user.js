@@ -1,11 +1,13 @@
 // ==UserScript==
 // @name         ODGQuick Copy Button
 // @namespace    http://tampermonkey.net/
-// @version      0.4
+// @version      0.5
 // @description  try to take over the world!
 // @author       Adolfo Medina
 // @match        https://www.odgbymcg.com/treatment
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=odgbymcg.com
+// @updateURL    https://raw.githubusercontent.com/mediad02/InfiniteScrollDS/main/ODGQuickCopyButton.user.js
+// @downloadURL  https://raw.githubusercontent.com/mediad02/InfiniteScrollDS/main/ODGQuickCopyButton.user.js
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
@@ -44,7 +46,18 @@
         let modifiedDate = cloneElement.querySelector('div.modified-date').cloneNode(true).textContent;
         let treatmentTypeNode = Array.from(cloneElement.querySelectorAll('article div.row div.col-md-11 div.col-md-12'))
             .find(div => div.textContent.includes('Treatment type:'));
-        let treatmentType = treatmentTypeNode?.cloneNode(true)?.textContent ?? ''
+        let treatmentType = treatmentTypeNode?.textContent ?? '';
+
+        let bodySystemNode = Array.from(cloneElement.querySelectorAll('article div.row div.col-md-11 div.col-md-12'))
+            .find(div => div.textContent.includes('Body system:'));
+        let bodySystem = bodySystemNode?.textContent ?? '';
+
+        let relatedTopicsNode = Array.from(cloneElement.querySelectorAll('article div.row div.col-md-11 div.col-md-12'))
+            .find(div => div.textContent.includes('Related Topics:'));
+        let relatedTopics = relatedTopicsNode?.innerText ?? '';
+        relatedTopics = relatedTopics.replace(/\n/, " ");
+        console.log(relatedTopics);
+
         let header = cloneElement.querySelector('h2.tab-header').cloneNode(true).textContent;
 
         cloneElement.querySelector('article div.row div.col-md-11 div.recommendation-section h3.page-subheader').firstChild.data += " - "
@@ -53,7 +66,12 @@
         cloneElement.querySelector('h2.tab-header').remove();
         cloneElement.querySelector('div.proc-code-section').remove();
         cloneElement.querySelectorAll('article div.row div.col-md-11 div.col-md-12').forEach(div => {
-            if(div.textContent.includes('Citations') || div.textContent.includes('Body system:') || div.textContent.includes('Related Topics:') || div.textContent.includes('Treatment type:')) {
+            if (!cloneElement.querySelector('article div.row div.col-md-11 div.recommendation-section h3.page-subheader').textContent.includes('See Reference')) {
+                if (div.innerHTML.includes('<p>Citations</p>') || div.textContent.includes('Body system:') || div.textContent.includes('Related Topics:') || div.textContent.includes('Treatment type:')) {
+                    div.remove();
+                }
+            }
+            if (div.textContent.includes('Body system:')) {
                 div.remove();
             }
         });
@@ -61,6 +79,7 @@
         cloneElement.querySelector('div.modified-date').remove();
 
         let guideline = cloneElement.outerHTML;
+        let guidelineText = cloneElement.outerText;
 
         try {
             await navigator.clipboard.write([
@@ -70,7 +89,7 @@
                         { type: 'text/html' }
                     ),
                     'text/plain': new Blob(
-                        ['ODG by MCG', modifiedDate.textContent, guideline.textContent],
+                        ['ODG by MCG\n', modifiedDate + "\n", header, treatmentType, guidelineText],
                         { type: 'text/plain' }
                     )
                 })
