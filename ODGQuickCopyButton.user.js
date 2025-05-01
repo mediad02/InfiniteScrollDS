@@ -1,15 +1,15 @@
 // ==UserScript==
 // @name         ODGQuick Copy Button
 // @namespace    http://tampermonkey.net/
-// @version      0.5
+// @version      0.50
 // @description  try to take over the world!
 // @author       Adolfo Medina
 // @match        https://www.odgbymcg.com/treatment
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=odgbymcg.com
-// @updateURL    https://raw.githubusercontent.com/mediad02/InfiniteScrollDS/main/ODGQuickCopyButton.user.js
-// @downloadURL  https://raw.githubusercontent.com/mediad02/InfiniteScrollDS/main/ODGQuickCopyButton.user.js
 // @grant        none
 // @run-at       document-end
+// @updateURL    https://raw.githubusercontent.com/mediad02/InfiniteScrollDS/main/ODGQuickCopyButton.user.js
+// @downloadURL  https://raw.githubusercontent.com/mediad02/InfiniteScrollDS/main/ODGQuickCopyButton.user.js
 // ==/UserScript==
 
 (function () {
@@ -28,7 +28,7 @@
         let button = document.createElement('button');
 
         button.textContent = "Copy";
-        button.className = 'copy-guideline-btn';
+        button.className = 'copy-guideline-btn btn btn-primary';
         button.style.marginLeft = '10px';
         button.style.textAlign = 'left';
 
