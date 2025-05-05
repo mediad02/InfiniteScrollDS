@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         ODGQuick Copy Button
 // @namespace    http://tampermonkey.net/
-// @version      0.50
+// @version      0.51
 // @description  try to take over the world!
 // @author       Adolfo Medina
 // @match        https://www.odgbymcg.com/treatment
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=odgbymcg.com
+// @tag          productivity
 // @grant        none
 // @run-at       document-end
 // @updateURL    https://raw.githubusercontent.com/mediad02/InfiniteScrollDS/main/ODGQuickCopyButton.user.js
