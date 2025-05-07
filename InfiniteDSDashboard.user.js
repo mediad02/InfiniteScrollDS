@@ -15,16 +15,37 @@
 (function () {
     'use strict';
 
-    const strategies = {
-        dashboard: () => {
-            console.log('Dashboard strategy running...');
-            loadAllPages();
-        },
-        case: () => {
-            console.log('Case strategy running...');
-            // logic here
+    // Define a mapping of URL patterns to their corresponding strategies
+    const urlStrategies = [
+        { pattern: '/dashboard', action: dashboardStrategy },
+        { pattern: '/referrals/', action: caseStrategy }
+    ];
+
+    // Function to determine and execute the appropriate strategy
+    function determineStrategy() {
+        const url = window.location.href;
+
+        // Find the first matching strategy
+        const matchedStrategy = urlStrategies.find(strategy => url.includes(strategy.pattern));
+
+        if (matchedStrategy) {
+            matchedStrategy.action();
+        } else {
+            console.warn('No matching strategy found for the current URL.');
         }
-    };
+    }
+
+    // Strategy for the dashboard
+    function dashboardStrategy() {
+        console.log('Dashboard strategy running...');
+        loadAllPages();
+    }
+
+    // Strategy for case pages
+    function caseStrategy() {
+        console.log('Case strategy running...');
+        // Add case-specific logic here
+    }
 
     function loadAllPages() {
 
@@ -81,14 +102,14 @@
                     try {
                         let newDoc = new DOMParser().parseFromString(response.responseText, 'text/html');
                         let dateExpedited = newDoc.querySelector('body table.index tbody tr[data-org-name="Oristech"] td:nth-child(3)')?.textContent.trim();
-                        
+
                         if (dateExpedited) {
                             let [datePart, timePart] = dateExpedited.split(' at ');
 
                             // Parse datePart
                             let datePartDate = new Date(datePart);
 
-                            let month = datePartDate.getMonth()+1;
+                            let month = datePartDate.getMonth() + 1;
                             let day = datePartDate.getDate();
                             let year = datePartDate.getFullYear();
 
@@ -99,14 +120,14 @@
                             minutes = parseInt(minutes);
                             if (period === 'PM' && hours !== 12) hours += 12;
                             if (period === 'AM' && hours === 12) hours = 0;
-                            
+
                             // Construct the Date object
                             let date = new Date(year, month - 1, day, hours, minutes);
                             date.setHours(date.getHours() - 1); // Subtract 1 hour
-                            
+
                             let formattedDate = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
                             let formattedTime = (date.getHours() % 12 || 12) + ':' + (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ' ' + (date.getHours() >= 12 ? 'PM' : 'AM');
-                            
+
                             let timeDue = new Date(date);
                             switch (isRush) {
                                 case 'XX':
@@ -121,7 +142,7 @@
                             }
                             timeDue = timeDue.toLocaleTimeString();
 
-                            resolve({formattedDate, formattedTime, timeDue});
+                            resolve({ formattedDate, formattedTime, timeDue });
                         } else {
                             resolve({});
                         }
@@ -138,11 +159,8 @@
 
     function getRowData(row) {
         let today = new Date();
-        let month = today.getMonth() + 1;
-        let day = today.getDate();
-        let year = today.getFullYear();
+        let formattedDate = today.toLocaleDateString();
 
-        let formattedDate = month + '/' + day + '/' + year;
         let referralNumber = row.querySelector('td:nth-child(2) a')?.textContent.trim();
         let isRush = checkRush(row);
         let teamAssignment = getTeam(row.querySelector('td:nth-child(3)').firstChild?.textContent.trim());
@@ -152,7 +170,7 @@
         let stateJurisdiction = row.querySelector('td:nth-child(7)')?.textContent.trim();
         let timeReceived = getTimeSubHr(row.querySelector('td:nth-child(8)').lastChild?.textContent.trim(), -1);
         let timeDue = getTimeSubHr(row.querySelector('td:nth-child(8)').lastChild?.textContent.trim(), isRush === "X" ? 1 : 3);
-        
+
         let initialPageCount = row.querySelector('td:nth-child(9)')?.textContent.trim();
 
         return {
@@ -170,8 +188,6 @@
 
     function checkRush(row) {
         var today = new Date();
-        var isFriday = today.getDay() === 5;
-        var todayDate = today.getDate();
 
         let isRush = '';
         let rushIndicator = row.querySelector('td:nth-child(2) span[style]')?.textContent.trim();
@@ -196,20 +212,8 @@
         } else if (rushIndicator === '!!!' || hasCaseNotification) {
             isRush = 'X';
         }
-        
+
         return isRush;
-    }
-
-    function isLessThan24Hours(parsedDateTime1, parsedDateTime2) {
-
-        // Calculate the difference in milliseconds
-        const differenceInMilliseconds = Math.abs(parsedDateTime2 - parsedDateTime1);
-
-        // Convert milliseconds to hours
-        const differenceInHours = differenceInMilliseconds / (1000 * 60 * 60);
-
-        // Check if the difference is less than 24 hours
-        return differenceInHours <= 24;
     }
 
     function parseDateTime(dateTimeStr) {
@@ -336,6 +340,6 @@
         }
     }
 
-    loadAllPages();
+    determineStrategy();
 
 })();

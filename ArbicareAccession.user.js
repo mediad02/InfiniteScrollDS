@@ -43,7 +43,7 @@
 
             // Position the button relative to the row
             row.style.position = 'relative';
-            row.appendChild(button);
+            row.prepend(button);
 
             // Add click event to copy row data
             button.addEventListener('click', () => {
@@ -64,7 +64,6 @@
                     `${timeString}\t`;
                 
                 GM_setClipboard(formattedRowData);
-                alert(`Row ${index + 1} data copied to clipboard!`);
             });
         });
     }
