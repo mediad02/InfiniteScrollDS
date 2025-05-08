@@ -43,12 +43,32 @@
     // Handle the copy button click event
     function handleCopyClick(row, index) {
         const rowDataArray = Array.from(row.querySelectorAll('th, td')).map(cell => cell.innerText.trim());
-
+    
         // Rearrange or format the data as needed
         const formattedRowData = formatRowData(rowDataArray);
-
+    
         // Copy to clipboard
         GM_setClipboard(formattedRowData);
+    
+        console.log(`Row ${index + 1} data copied to clipboard!`);
+    
+        // Get the button that was clicked
+        const button = row.querySelector('.copy-button');
+    
+        // Change button text and color temporarily
+        if (button) {
+            const originalText = button.textContent;
+            const originalColor = button.style.backgroundColor;
+    
+            button.textContent = 'Clicked!';
+            button.style.backgroundColor = 'green';
+    
+            // Revert back after 1 second
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.backgroundColor = originalColor;
+            }, 1000);
+        }
     }
 
     // Format row data into a tab-separated string
@@ -75,9 +95,8 @@
     function createCopyButton() {
         const button = document.createElement('button');
         button.textContent = 'Copy';
+        button.className = 'copy-button';
         Object.assign(button.style, {
-            position: 'absolute',
-            marginLeft: '10px',
             cursor: 'pointer',
             backgroundColor: '#007bff',
             color: '#fff',
