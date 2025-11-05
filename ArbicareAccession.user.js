@@ -1,114 +1,12 @@
 // ==UserScript==
 // @name         ArbicareAccession
 // @namespace    http://tampermonkey.net/
-// @version      0.01
+// @version      0.02
 // @description  Accession data from Arbicare.
 // @author       Adolfo Medina
-// @match        https://partners.arbicare.com/s/
+// @match        https://mail.google.com/mail/u/*/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=arbicare.com
-// @grant        GM_setClipboard
 // @updateURL    https://raw.githubusercontent.com/mediad02/InfiniteScrollDS/main/ArbicareAccession.user.js
 // @downloadURL  https://raw.githubusercontent.com/mediad02/InfiniteScrollDS/main/ArbicareAccession.user.js
 // ==/UserScript==
-
-(function () {
-    'use strict';
-
-    // Wait for the table to be fully loaded and populated
-    function waitForTable() {
-        const table = document.querySelector('div.test-listViewManager table.slds-table');
-        if (table && table.querySelectorAll('tbody tr').length > 0) {
-            addCopyButtons();
-        } else {
-            setTimeout(waitForTable, 500); // Retry after 500ms
-        }
-    }
-
-    // Add a floating button beside each row
-    function addCopyButtons() {
-        const rows = document.querySelectorAll('div.test-listViewManager table.slds-table tbody tr');
-        rows.forEach((row, index) => {
-            // Create the button
-            const button = createCopyButton();
-
-            // Position the button relative to the row
-            row.style.position = 'relative';
-            row.prepend(button);
-
-            // Add click event to copy row data
-            button.addEventListener('click', () => handleCopyClick(row, index));
-        });
-    }
-
-    // Handle the copy button click event
-    function handleCopyClick(row, index) {
-        const rowDataArray = Array.from(row.querySelectorAll('th, td')).map(cell => cell.innerText.trim());
-    
-        // Rearrange or format the data as needed
-        const formattedRowData = formatRowData(rowDataArray);
-    
-        // Copy to clipboard
-        GM_setClipboard(formattedRowData);
-    
-        console.log(`Row ${index + 1} data copied to clipboard!`);
-    
-        // Get the button that was clicked
-        const button = row.querySelector('.copy-button');
-    
-        // Change button text and color temporarily
-        if (button) {
-            const originalText = button.textContent;
-            const originalColor = button.style.backgroundColor;
-    
-            button.textContent = 'Clicked!';
-            button.style.backgroundColor = 'green';
-    
-            // Revert back after 1 second
-            setTimeout(() => {
-                button.textContent = originalText;
-                button.style.backgroundColor = originalColor;
-            }, 1000);
-        }
-    }
-
-    // Format row data into a tab-separated string
-    function formatRowData(rowDataArray) {
-        const date = new Date();
-        const dateString = date.toLocaleDateString();
-        const timeString = date.toLocaleTimeString();
-
-        // Example of rearranging or formatting data
-        return [
-            dateString,
-            '', // Empty column
-            rowDataArray[3] || '', // Safely access array elements
-            rowDataArray[2] || '',
-            rowDataArray[5] || '',
-            rowDataArray[13] || '',
-            '', // Empty column
-            rowDataArray[6] || '',
-            timeString,
-        ].join('\t');
-    }
-
-    // Create a reusable copy button
-    function createCopyButton() {
-        const button = document.createElement('button');
-        button.textContent = 'Copy';
-        button.className = 'copy-button';
-        Object.assign(button.style, {
-            cursor: 'pointer',
-            backgroundColor: '#007bff',
-            color: '#fff',
-            border: 'none',
-            padding: '5px 10px',
-            borderRadius: '5px',
-            fontSize: '12px',
-        });
-        return button;
-    }
-
-    // Start the script
-    waitForTable();
-})();
-
+"use strict";(()=>{function N(){let e=document.createElement("button");return e.textContent="Copy Referral",e.style.position="fixed",e.style.bottom="50px",e.style.left="24px",e.style.zIndex="10000",e.style.padding="12px 24px",e.style.background="#1976d2",e.style.color="#fff",e.style.border="none",e.style.borderRadius="6px",e.style.boxShadow="0 2px 8px rgba(0,0,0,0.15)",e.style.fontSize="16px",e.style.fontWeight="bold",e.style.cursor="pointer",e.style.transition="background 0.2s",e}function g(e,t){e.disabled=!t,e.style.opacity=t?"1":"0.5",e.style.cursor=t?"pointer":"not-allowed",e.dataset.copied||(e.style.background=t?"#1976d2":"#bdbdbd")}function y(e,t=2e3){let n=e.textContent,i=e.style.background;e.textContent="Referral Copied",e.style.background="#43a047",e.dataset.copied="true",setTimeout(()=>{e.textContent=n,e.style.background=e.disabled?"#bdbdbd":"#1976d2",delete e.dataset.copied},t)}function p(e,t=2e3){let n=e.textContent,i=e.style.background;e.textContent="Copy Error",e.style.background="#d32f2f",e.dataset.copied="true",setTimeout(()=>{e.textContent=n,e.style.background=e.disabled?"#bdbdbd":"#1976d2",delete e.dataset.copied},t)}function x(){let e=document.querySelector("h2.hP, h1.hP");return e&&e.textContent?.trim()||null}function I(e){let t=document.body;new MutationObserver(()=>e()).observe(t,{childList:!0,subtree:!0})}var r=N();g(r,!1);document.body.appendChild(r);r.addEventListener("click",async()=>{let e=document.querySelector("div.a3s"),t=x(),n=document.querySelector("span.g3, span.gH, span.gK"),i=n&&(n.getAttribute("title")||n.textContent?.trim())||"";if(e&&t&&i){let s=e.textContent||"",d=E(t,s,i);try{await navigator.clipboard.writeText(d),y(r)}catch{try{let c=document.createRange();c.selectNodeContents(e);let l=window.getSelection();l?.removeAllRanges(),l?.addRange(c);let u=document.execCommand("copy");l?.removeAllRanges(),u?y(r):p(r)}catch{p(r)}}}});document.addEventListener("keydown",e=>{e.ctrlKey&&(e.key==="c"||e.key==="C")&&!r.disabled&&!window.getSelection()?.toString()&&(e.preventDefault(),r.click())});function E(e,t,n){let i="",s="",d="",a=new Date(n);isNaN(a.getTime())||(a.setHours(a.getHours()+1),i=a.toLocaleDateString("default",{month:"2-digit",day:"2-digit",year:"numeric"}),s=a.toLocaleTimeString("en-default",{hour:"numeric",minute:"2-digit"}));let c=e.match(/Arbicare Referral for Setup\s*-\s*([A-Z0-9.\-]+)\s*-/i),l=c?c[1]:"",u=t.match(/Case Number\s*-\s*0*([0-9]+)/i),S=u?u[1]:"",C=t.match(/Client Name\s*-\s*([^\n\r]+)/i),T=C?C[1].trim():"",v=h(T,D),b=t.match(/Priority\s*-\s*(\w+)/i),f=b&&b[1].toLowerCase()==="stat"?"X":"",A=t.match(/Review- [^,]+, ([^\n\r]+)/i),m=A?A[1].trim():"";m=h(m,L);let M=t.match(/Jurisdiction\s*-\s*([A-Za-z ]+)/i),k=M?M[1].trim():"",R=h(k,H);if(s){let o=new Date(n);o.setHours(o.getHours()+1),f==="X"?o.setHours(o.getHours()+1):o.setHours(o.getHours()+3),d=o.toLocaleTimeString("en-default",{hour:"numeric",minute:"2-digit"})}return[i,f,l,S,v,m,"",R,s,d].join("	")}var H={Alabama:"AL",Alaska:"AK",Arizona:"AZ",Arkansas:"AR",California:"CA",Colorado:"CO",Connecticut:"CT",Delaware:"DE",Florida:"FL",Georgia:"GA",Hawaii:"HI",Idaho:"ID",Illinois:"IL",Indiana:"IN",Iowa:"IA",Kansas:"KS",Kentucky:"KY",Louisiana:"LA",Maine:"ME",Maryland:"MD",Massachusetts:"MA",Michigan:"MI",Minnesota:"MN",Mississippi:"MS",Missouri:"MO",Montana:"MT",Nebraska:"NE",Nevada:"NV","New Hampshire":"NH","New Jersey":"NJ","New Mexico":"NM","New York":"NY","North Carolina":"NC","North Dakota":"ND",Ohio:"OH",Oklahoma:"OK",Oregon:"OR",Pennsylvania:"PA","Rhode Island":"RI","South Carolina":"SC","South Dakota":"SD",Tennessee:"TN",Texas:"TX",Utah:"UT",Vermont:"VT",Virginia:"VA",Washington:"WA","West Virginia":"WV",Wisconsin:"WI",Wyoming:"WY"},L={"New York Drug Formulary":"NYDF"},D={"Cincinnati Insurance":"Cincinnati","AmTrust Financial Services Group":"AmTrust","Pacific Claims":"PCM","All America Insurance":" All America Insu.","Accident Fund Co":"Accident Fund","North American Risk Services Inc":"NARS","Employers Insurance":"Empl Insu.","Marriott International":"Marriott",Travelers:"Travelers","Hammerman & Gainer LLC":"HGI","Wright Risk Management":"Wright Risk","Central Mutual Insurance Co":"Cent Mutual Ins.","Status Medical Management":"Status Med"};function h(e,t){return t[e]||e}function w(){let e=x(),t=!!e&&e.startsWith("Arbicare Referral for Setup");g(r,t)}I(w);w();})();
