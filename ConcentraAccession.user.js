@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Concentra Accession
 // @namespace    http://tampermonkey.net/
-// @version      0.01
+// @version      0.02
 // @description  Accession data from Concentra.
 // @author       Adolfo Medina
 // @match        https://genex.cidmcorp.com/default.aspx
@@ -9,11 +9,10 @@
 // @grant        none
 // @updateURL    https://raw.githubusercontent.com/mediad02/InfiniteScrollDS/main/ConcentraAccession.user.js
 // @downloadURL  https://raw.githubusercontent.com/mediad02/InfiniteScrollDS/main/ConcentraAccession.user.js
-// @require      file://D:/Users/Adolfo/Documents/Projects/JavaScript/InfiniteScrollDS/ConcentraAccession.user.js
 // ==/UserScript==
 
 
-(function() {
+(function () {
     'use strict';
 
     function addCopyButtons() {
@@ -59,9 +58,9 @@
                 organization = orgMap[organization] || organization;
 
                 let formattedRowData = `${organization}\t` +
-                   `${rowDataArray[16]}\t` +
-                   `${isCall}\t\t\t\t` +
-                   `${isStat}`;
+                    `${rowDataArray[16]}\t` +
+                    `${isCall}\t\t\t\t` +
+                    `${isStat}`;
 
                 navigator.clipboard.writeText(formattedRowData).then(() => {
                     console.log(`Row ${index} data copied to clipboard`);
@@ -78,11 +77,11 @@
                 }, 2000);
             });
         });
-        }
-    
+    }
+
 
     let startButton = document.querySelector('#btnLoadReviews');
-    startButton.addEventListener('click', function() {
+    startButton.addEventListener('click', function () {
         setTimeout(addCopyButtons, 500);
     });
 
