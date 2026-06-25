@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Ethos Script
 // @namespace    http://tampermonkey.net/
-// @version      0.01
+// @version      0.02
 // @description  Enhances Sightline Dashboard with automation and clipboard features.
 // @author       Adolfo Medina
 // @match        https://sightline.ethosrisk.com/Cases/CaseSearch
@@ -19,4 +19,4 @@
 // @resource     NOTYF_CSS https://cdnjs.cloudflare.com/ajax/libs/notyf/3.10.0/notyf.min.css
 // @require      https://cdnjs.cloudflare.com/ajax/libs/notyf/3.10.0/notyf.min.js
 // ==/UserScript==
-"use strict";(()=>{var s="https://script.google.com/macros/s/AKfycbwJo_lVDhGnVBiuY6RiR-Yxo0UthaqrQ2dJIV2pmmwIqa-GlKRrjL4_n5ed14I_QgIsDQ/exec?route=ethos";GM_registerMenuCommand("\u{1F511} Authorize Google Script API",()=>GM_openInTab(s));GM_addStyle(GM_getResourceText("NOTYF_CSS"));GM_xmlhttpRequest({method:"GET",url:s,onload:c});sessionStorage.getItem("scriptLoaded")||(new Notyf({duration:0,position:{x:"right",y:"top"},dismissible:!0}).success("Ethos Script V0.1 Loaded Successfully"),sessionStorage.setItem("scriptLoaded","true"));function c(e){document.getElementById("MainContent_btnSearch").addEventListener("click",()=>{GM_xmlhttpRequest({method:"GET",url:s,onload:c})});let n=new Notyf({duration:3e3,position:{x:"right",y:"top"},dismissible:!0});e.status!==200&&n.error("Request failed with status: "+e.status),n.success("Current Cases Retrieved Successfully");let l=JSON.parse(e.responseText),r=document.getElementById("MainContent_grdSearchResults").rows;for(let o=1;o<r.length;o++){let t=r[o]?.cells[6],i=t?.innerText;i&&l.includes(i)&&t&&t.style&&(t.style.backgroundColor="chartreuse",t.style.fontWeight="bold")}}})();
+"use strict";(()=>{var n="https://script.google.com/macros/s/AKfycbwJo_lVDhGnVBiuY6RiR-Yxo0UthaqrQ2dJIV2pmmwIqa-GlKRrjL4_n5ed14I_QgIsDQ/exec?route=ethos";GM_registerMenuCommand("\u{1F511} Authorize Google Script API",()=>GM_openInTab(n));GM_addStyle(GM_getResourceText("NOTYF_CSS"));GM_xmlhttpRequest({method:"GET",url:n,onload:i});sessionStorage.getItem("scriptLoaded")||(new Notyf({duration:0,position:{x:"right",y:"top"},dismissible:!0}).success("Ethos Script V0.1 Loaded Successfully"),sessionStorage.setItem("scriptLoaded","true"));function i(t){document.getElementById("MainContent_btnSearch").addEventListener("click",()=>{GM_xmlhttpRequest({method:"GET",url:n,onload:i})});let e=new Notyf({duration:3e3,position:{x:"right",y:"top"},dismissible:!0});t.status!==200&&e.error("Request failed with status: "+t.status),e.success("Current Cases Retrieved Successfully");let o=JSON.parse(t.responseText);c(o)}function c(t){document.querySelectorAll("#MainContent_grdSearchResults tbody tr").forEach(e=>{let o=e.querySelector("td:nth-child(7) a")?.textContent?.trim(),s=e.querySelector("td:nth-child(7)");if(o){let r=t.find(a=>a[0]===o);r&&(r[1]===""?(s.style.backgroundColor="chartreuse",s.style.fontWeight="bold"):(s.style.backgroundColor="gold",s.style.fontWeight="bold"))}})}})();
