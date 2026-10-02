@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         Concentra Accession
 // @namespace    http://tampermonkey.net/
-// @version      0.02
+// @version      0.03
 // @description  Accession data from Concentra.
 // @author       Adolfo Medina
 // @match        https://genex.cidmcorp.com/default.aspx
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=cidmcorp.com
 // @grant        none
-// @updateURL    https://raw.githubusercontent.com/mediad02/InfiniteScrollDS/main/ConcentraAccession.user.js
-// @downloadURL  https://raw.githubusercontent.com/mediad02/InfiniteScrollDS/main/ConcentraAccession.user.js
+// @updateURL    none
+// @downloadURL  none
 // ==/UserScript==
 
 

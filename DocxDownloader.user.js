@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Docx Downloader
 // @namespace    http://tampermonkey.net/
-// @version      0.04
+// @version      0.05
 // @description  Downloader button for Docx files in Danestreet
 // @author       Adolfo Medina
 // @match        https://danestreet.com/referrals/*
@@ -9,8 +9,8 @@
 // @grant        none
 // @require      https://cdn.jsdelivr.net/npm/docx@9.5.3/dist/index.iife.min.js
 // @require      https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js
-// @updateURL    https://raw.githubusercontent.com/mediad02/InfiniteScrollDS/main/DocxDownloader.user.js
-// @downloadURL  https://raw.githubusercontent.com/mediad02/InfiniteScrollDS/main/DocxDownloader.user.js
+// @updateURL    none
+// @downloadURL  none
 // ==/UserScript==
 "use strict";(()=>{var D=class{constructor(){this.reminder="Unable to find any Literature Peer-Reviewed more recent than primary guidelines (body chapter) effective date of (date).";this.CTReminder=`If a drug class/treatment is noted under the guidelines then we would need to have a statement similar to the below:
 

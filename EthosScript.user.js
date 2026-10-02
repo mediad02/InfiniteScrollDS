@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Ethos Script
 // @namespace    http://tampermonkey.net/
-// @version      0.02
+// @version      0.03
 // @description  Enhances Sightline Dashboard with automation and clipboard features.
 // @author       Adolfo Medina
 // @match        https://sightline.ethosrisk.com/Cases/CaseSearch
@@ -14,8 +14,8 @@
 // @grant        GM_openInTab
 // @connect      script.google.com
 // @connect      script.googleusercontent.com
-// @updateURL    https://raw.githubusercontent.com/mediad02/InfiniteScrollDS/main/EthosScript.user.js
-// @downloadURL  https://raw.githubusercontent.com/mediad02/InfiniteScrollDS/main/EthosScript.user.js
+// @updateURL    none
+// @downloadURL  none
 // @resource     NOTYF_CSS https://cdnjs.cloudflare.com/ajax/libs/notyf/3.10.0/notyf.min.css
 // @require      https://cdnjs.cloudflare.com/ajax/libs/notyf/3.10.0/notyf.min.js
 // ==/UserScript==

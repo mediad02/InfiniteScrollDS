@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DaneStreet  Special Project Script
 // @namespace    http://tampermonkey.net/
-// @version      0.03
+// @version      0.04
 // @description  Enhances DaneStreet Dashboard with automation and clipboard features.
 // @author       Adolfo Medina
 // @match        https://danestreet.com/dashboard*
@@ -11,8 +11,8 @@
 // @grant        GM_registerMenuCommand
 // @connect      script.google.com
 // @connect      script.googleusercontent.com
-// @updateURL    https://raw.githubusercontent.com/mediad02/InfiniteScrollDS/main/DaneStreetSpecialProjectScript.user.js
-// @downloadURL  https://raw.githubusercontent.com/mediad02/InfiniteScrollDS/main/DaneStreetSpecialProjectScript.user.js
+// @updateURL    none
+// @downloadURL  none
 // ==/UserScript==
 "use strict";(()=>{var c=`.highlighted-missing-default {
     background-color: #cfffdc;
